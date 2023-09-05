@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+// import { RNCamera } from 'react-native-camera';
+// import BarcodeMask from 'react-native-barcode-mask';
 import './style.css'
 
 function Search() {
@@ -42,7 +44,7 @@ function Search() {
             } */}
 
             {data && Object.keys(data).length > 0 && (
-                <table>
+                <table style={{ marginTop: "10px" }}>
                     <thead>
                         <tr>
                             <th>Key</th>
