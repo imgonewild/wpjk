@@ -1,15 +1,51 @@
 import React, { useState } from 'react';
-// import { RNCamera } from 'react-native-camera';
-// import BarcodeMask from 'react-native-barcode-mask';
+import QrReader from 'react-qr-scanner'
 import './style.css'
 
 function Search() {
-    const [label, setlabel] = useState("WP-DV-23102");
+    const [label, setlabel] = useState();
     const [data, setdata] = useState([])
+    const [img, setImg] = useState(null)
+    const domain = window.location.hostname;
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        console.log(file)
+        if (file) {
+            if (file.type !== 'text/csv') {
+                alert('Please select a CSV file.');
+            } else {
+                handleUpload(file);
+            }
+        }
+    };
+
+    const handleUpload = (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch(`http://${domain}:5000/upload`, {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.status == 'OK') {
+                    alert("Import successfully!")
+                } else {
+                    alert(data.toString())
+                }
+
+            })
+            .catch(error => {
+                console.error('Upload failed:', error);
+                alert('Upload failed! ' + error)
+            });
+    };
 
     function search() {
-        const domain = window.location.hostname;
-
+        setImg(label)
         fetch(`http://${domain}:5000/fetchLabel`, {
             method: 'POST',
             body: JSON.stringify({ "label": label })
@@ -33,15 +69,18 @@ function Search() {
     }
 
     return (
-        <div style={{ marginTop: "50px", marginLeft: "50px" }}>
-            Label:
-            <input type="text" value={label} onChange={handleInputChange}
+        <div style={{ marginTop: "15px", marginLeft: "30px" }}>
+
+            <input accept=".csv" type="file" onChange={handleFileChange} />
+            {/* <button onClick={handleUpload}>Upload CSV</button> */}
+
+            <input type="text" placeholder="Enter label" value={label} onChange={handleInputChange}
             />
             <button onClick={search}>Search</button>
 
-            {/* {data.length != 0 &&
-                data.map((item, i) => <li key={i}>{item}</li>)
-            } */}
+            {img &&
+                <img src={`/${img}.jpg`} alt={`${img}`} />
+            }
 
             {data && Object.keys(data).length > 0 && (
                 <table style={{ marginTop: "10px" }}>
