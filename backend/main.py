@@ -46,6 +46,7 @@ def upload():
     fstring = f.read().decode("utf8")
     csv_dicts = [{k: v for k, v in row.items()} for row in
                  csv.DictReader(fstring.splitlines(), skipinitialspace=True)]
+    print(csv_dicts)
 
     try:
         conn = mysql.connector.connect(**db_config)
@@ -70,5 +71,5 @@ def upload():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='192.168.0.12', port=5000, debug=True, ssl_context='adhoc')
     # app.run(host='192.168.68.57', port=5000, debug=True, threaded=False)

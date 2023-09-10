@@ -1,16 +1,36 @@
-import React, { useState } from 'react';
-import QrReader from 'react-qr-scanner'
+import React, { useState, useRef } from 'react';
+import Html5QrcodePlugin from './Html5QrcodePlugin.jsx';
+
 import './style.css'
 
+function debounce(func, delay) {
+    let timeoutId;
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(this, args);
+      }, delay);
+    };
+}
+
 function Search() {
-    const [label, setlabel] = useState();
-    const [data, setdata] = useState([])
-    const [img, setImg] = useState(null)
+    const [label, setlabel] = useState("");
+    const [data, setdata] = useState([]);
+    const [img, setImg] = useState(null);
+    const inputRef = useRef();
+
+    const onNewScanResult = debounce((decodedText, decodedResult) => {
+        const val = decodedResult.decodedText
+        inputRef.current.value = val
+        setlabel(val)
+        search()
+    }, 200);
+
+    const protocol = window.location.protocol;
     const domain = window.location.hostname;
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-        console.log(file)
         if (file) {
             if (file.type !== 'text/csv') {
                 alert('Please select a CSV file.');
@@ -24,14 +44,14 @@ function Search() {
         const formData = new FormData();
         formData.append('file', file);
 
-        fetch(`http://${domain}:5000/upload`, {
+        fetch(`${protocol}//${domain}:5000/upload`, {
             method: 'POST',
             body: formData,
         })
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                if (data.status == 'OK') {
+                if (data.status === 'OK') {
                     alert("Import successfully!")
                 } else {
                     alert(data.toString())
@@ -46,7 +66,7 @@ function Search() {
 
     function search() {
         setImg(label)
-        fetch(`http://${domain}:5000/fetchLabel`, {
+        fetch(`${protocol}//${domain}:5000/fetchLabel`, {
             method: 'POST',
             body: JSON.stringify({ "label": label })
         })
@@ -54,13 +74,13 @@ function Search() {
             .then(data => {
                 data = data[0]
                 if (data === undefined) {
-                    alert("No result found.")
+                    // alert("No result found.")
                 } else {
                     setdata(data)
                 }
             })
             .catch(error => {
-                alert('Failed', error)
+                // alert('Failed', error)
             });
     }
 
@@ -70,17 +90,19 @@ function Search() {
 
     return (
         <div style={{ marginTop: "15px", marginLeft: "30px" }}>
-
+            {label}
             <input accept=".csv" type="file" onChange={handleFileChange} />
-            {/* <button onClick={handleUpload}>Upload CSV</button> */}
 
-            <input type="text" placeholder="Enter label" value={label} onChange={handleInputChange}
+            <input ref={inputRef} type="text" placeholder="Enter label" value={label} onChange={handleInputChange}
             />
             <button onClick={search}>Search</button>
 
-            {img &&
-                <img src={`/${img}.jpg`} alt={`${img}`} />
-            }
+            <Html5QrcodePlugin
+                    fps={20}
+                    qrbox={500}
+                    disableFlip={false}
+                    qrCodeSuccessCallback={onNewScanResult}
+                />
 
             {data && Object.keys(data).length > 0 && (
                 <table style={{ marginTop: "10px" }}>
@@ -100,6 +122,10 @@ function Search() {
                     </tbody>
                 </table>
             )}
+
+            {img &&
+                <img src={`/${img}.jpg`} alt={`${img}`} />
+            }
         </div>
     );
 }
