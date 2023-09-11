@@ -14,16 +14,16 @@ function debounce(func, delay) {
 }
 
 function Search() {
-    const [label, setlabel] = useState("");
-    const [data, setdata] = useState([]);
+    const [label, setLabel] = useState("");
+    const [data, setData] = useState([]);
     const [img, setImg] = useState(null);
     const inputRef = useRef();
 
     const onNewScanResult = debounce((decodedText, decodedResult) => {
         const val = decodedResult.decodedText
         inputRef.current.value = val
-        setlabel(val)
-        search()
+        setLabel(val)
+        btn_search(val)
     }, 200);
 
     const protocol = window.location.protocol;
@@ -64,11 +64,11 @@ function Search() {
             });
     };
 
-    function search() {
-        setImg(label)
+    const btn_search = (val)=>{
+        setImg(val)
         fetch(`${protocol}//${domain}:5000/fetchLabel`, {
             method: 'POST',
-            body: JSON.stringify({ "label": label })
+            body: JSON.stringify({ "label": val })
         })
             .then(response => response.json())
             .then(data => {
@@ -76,7 +76,7 @@ function Search() {
                 if (data === undefined) {
                     // alert("No result found.")
                 } else {
-                    setdata(data)
+                    setData(data)
                 }
             })
             .catch(error => {
@@ -85,7 +85,7 @@ function Search() {
     }
 
     function handleInputChange(event) {
-        setlabel(event.target.value);
+        setLabel(event.target.value);
     }
 
     return (
@@ -95,7 +95,7 @@ function Search() {
 
             <input ref={inputRef} type="text" placeholder="Enter label" value={label} onChange={handleInputChange}
             />
-            <button onClick={search}>Search</button>
+            <button onClick={() =>btn_search(label)}>Search</button>
 
             <Html5QrcodePlugin
                     fps={20}

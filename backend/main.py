@@ -71,5 +71,6 @@ def upload():
 
 
 if __name__ == '__main__':
-    app.run(host='192.168.0.12', port=5000, debug=True, ssl_context='adhoc')
+    app.run(host='192.168.68.57', port=5000, debug=True, threaded=False, ssl_context='adhoc')
+    # app.run(host='192.168.0.12', port=5000, debug=True, ssl_context='adhoc')
     # app.run(host='192.168.68.57', port=5000, debug=True, threaded=False)
