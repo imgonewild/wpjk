@@ -13,6 +13,16 @@ Open [https://YourIPAddress:3000](https://YourIPAddress:3000) to view it in your
 
 You need to allow insecure content(https://YourIpv4Address:3000) in your browser or you won't able to get respond from backend.
 
+### Chrome setup
+| ![Result](https://github.com/imgonewild/wpjk/blob/main/chrome_allow_insecure.jpg?raw=true) |
+|:--:| 
+| Step 1. Site Settings |
+
+
+| ![Result](https://github.com/imgonewild/wpjk/blob/main/chrome_allow_insecure_2.jpg?raw=true) |
+|:--:| 
+| Step 2. Privacy > Insecure content > Allow |
+
 <br />
 
 # Backend(Python Flask) 
