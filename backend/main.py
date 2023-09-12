@@ -2,6 +2,7 @@ from flask import Flask, json, request, jsonify
 from flask_cors import CORS, cross_origin
 import csv
 import mysql.connector
+import socket
 
 app = Flask(__name__)
 app.json.sort_keys = False
@@ -39,14 +40,14 @@ def index():
     except Exception as e:
         return str(e)
 
-
+@cross_origin()
 @app.route('/upload', methods=['POST'])
 def upload():
     f = request.files['file']
     fstring = f.read().decode("utf8")
     csv_dicts = [{k: v for k, v in row.items()} for row in
                  csv.DictReader(fstring.splitlines(), skipinitialspace=True)]
-    print(csv_dicts)
+    # print("csv_dicts",csv_dicts)
 
     try:
         conn = mysql.connector.connect(**db_config)
@@ -55,11 +56,10 @@ def upload():
         for data in csv_dicts:
             # Extract values from the dictionary
             values = [data.get(column) for column in data]
-
-            cursor.execute(
-                "INSERT INTO wpjk (`Plant`, `Label`, `user`, `location`, `IP address`, `IP type`, `MAC`, `HostName`, `Brand`, `Model`, `service ID/Serial number`, `CPU`, `RAM`, `Storage`, `OS type`, `os product key`, `Admin account`, `Password`, `office vision`, `Old`, `Old product key`, `antivirus`, `AS400`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                values
-            )
+            double_values = values *2
+            query = "INSERT INTO wpjk (plant,label,user,location,ip_address,ip_type,mac,host_name,brand,model,service_id_or_serial_number,cpu,ram,storage,os_type,os_product_key,admin_account,password,office_version,office_product_key,old_office_version,old_office_product_key,antivirus,as400) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE plant = %s,label = %s,user = %s,location = %s,ip_address = %s,ip_type = %s,mac = %s,host_name = %s,brand = %s,model = %s,service_id_or_serial_number = %s,cpu = %s,ram = %s,storage = %s,os_type = %s,os_product_key = %s,admin_account = %s,password = %s,office_version = %s,office_product_key = %s,old_office_version = %s,old_office_product_key = %s,antivirus = %s,as400 = %s"
+            cursor.execute(query, double_values)
+       
         conn.commit()
         cursor.close()
         conn.close()
@@ -70,7 +70,8 @@ def upload():
         return jsonify(str(e))
 
 
-if __name__ == '__main__':
-    app.run(host='192.168.68.57', port=5000, debug=True, threaded=False, ssl_context='adhoc')
+if __name__ == '__main__':    
+    app.run(socket.gethostbyname(socket.gethostname()), debug=True, port=5000)
+    # app.run(host=socket.gethostbyname(socket.gethostname()), port=5000, debug=True, threaded=False, ssl_context='adhoc')
     # app.run(host='192.168.0.12', port=5000, debug=True, ssl_context='adhoc')
     # app.run(host='192.168.68.57', port=5000, debug=True, threaded=False)

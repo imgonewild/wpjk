@@ -26,7 +26,9 @@ function Search() {
         btn_search(val)
     }, 200);
 
-    const protocol = window.location.protocol;
+    //const protocol = window.location.protocol;
+    console.log(window.location.protocol)
+    const protocol = "http:";
     const domain = window.location.hostname;
 
     const handleFileChange = (event) => {
@@ -90,7 +92,6 @@ function Search() {
 
     return (
         <div style={{ marginTop: "15px", marginLeft: "30px" }}>
-            {label}
             <input accept=".csv" type="file" onChange={handleFileChange} />
 
             <input ref={inputRef} type="text" placeholder="Enter label" value={label} onChange={handleInputChange}
