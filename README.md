@@ -1,4 +1,4 @@
-### Frontend(React Hooks)
+# Frontend(React Hooks)
 
 ## `npm install`
 
@@ -11,14 +11,22 @@ Open [https://YourIPAddress:3000](https://YourIPAddress:3000) to view it in your
 
 ## Notes:
 
-You need to allow insecure content in your browser or you won't able to get respond from backend.
+You need to allow insecure content(https://YourIpv4Address:3000) in your browser or you won't able to get respond from backend.
 
-### Backend(Python Flask)
+<br />
 
-## `cd backend` and run `pip install -r requirements.txt`
+# Backend(Python Flask) 
+
+## `pip install -r backend/requirements.txt`
 
 Install dependency
 
-### XAMPP Database Installation
+Request url: https://YourIpv4Address:5000
+
+<br />
+
+# XAMPP Database Installation
+
+Download XAMPP from [offical website](https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/8.2.4/xampp-windows-x64-8.2.4-0-VS16-installer.exe)
 
 Import `./backend/wpjk.sql` to MySQL database
