@@ -1,17 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Html5QrcodePlugin from './Html5QrcodePlugin.jsx';
-
 import './style.css'
-
-function debounce(func, delay) {
-    let timeoutId;
-    return function (...args) {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func.apply(this, args);
-      }, delay);
-    };
-}
 
 function Search() {
     const [label, setLabel] = useState("");
@@ -19,17 +8,24 @@ function Search() {
     const [img, setImg] = useState(null);
     const inputRef = useRef();
 
-    const onNewScanResult = debounce((decodedText, decodedResult) => {
-        const val = decodedResult.decodedText
-        inputRef.current.value = val
-        setLabel(val)
-        btn_search(val)
-    }, 200);
+    let canTrigger = true;
+    const onNewScanResult = (decodedText, decodedResult) => {
+        if (canTrigger) {
+          canTrigger = false;
+      
+          const val = decodedResult.decodedText;
+          inputRef.current.value = val;
+          setLabel(val);
+          btn_search(val);
+      
+          setTimeout(() => {
+            canTrigger = true;
+          }, 1000); // Allow triggering again after 1 second
+        }
+    };      
 
-    //const protocol = window.location.protocol;
-    console.log(window.location.protocol)
     const protocol = "http:";
-    const domain = window.location.hostname;
+    const hostname = window.location.hostname;
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -46,7 +42,7 @@ function Search() {
         const formData = new FormData();
         formData.append('file', file);
 
-        fetch(`${protocol}//${domain}:5000/upload`, {
+        fetch(`${protocol}//${hostname}:5000/upload`, {
             method: 'POST',
             body: formData,
         })
@@ -68,7 +64,7 @@ function Search() {
 
     const btn_search = (val)=>{
         setImg(val)
-        fetch(`${protocol}//${domain}:5000/fetchLabel`, {
+        fetch(`${protocol}//${hostname}:5000/fetchLabel`, {
             method: 'POST',
             body: JSON.stringify({ "label": val })
         })
@@ -90,11 +86,17 @@ function Search() {
         setLabel(event.target.value);
     }
 
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            btn_search(label)
+        }
+    }
+
     return (
         <div style={{ marginTop: "15px", marginLeft: "30px" }}>
             <input accept=".csv" type="file" onChange={handleFileChange} />
 
-            <input ref={inputRef} type="text" placeholder="Enter label" value={label} onChange={handleInputChange}
+            <input ref={inputRef} type="text" placeholder="Enter label" value={label} onChange={handleInputChange} onKeyDown={handleKeyDown}
             />
             <button onClick={() =>btn_search(label)}>Search</button>
 
