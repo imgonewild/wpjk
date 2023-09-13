@@ -24,7 +24,7 @@ function Search() {
         }
     };      
 
-    const protocol = "http:";
+    const protocol = "https:";
     const hostname = window.location.hostname;
 
     const handleFileChange = (event) => {
