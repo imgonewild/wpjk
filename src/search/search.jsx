@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Html5QrcodePlugin from './Html5QrcodePlugin.jsx';
+import { Html5QrcodeScanType } from 'html5-qrcode';
 import './style.css'
 
 function Search() {
@@ -93,9 +94,15 @@ function Search() {
     }
 
     return (
-        <div style={{ marginTop: "15px", marginLeft: "30px" }}>
+        <div style={{ marginTop: "15px", marginLeft: "10px", marginRight: "10px" }}>
+            <img src="./inteplast_wpjk.jpg" alt="Inteplast" height={70} style={{ marginBottom: "10px" }}/>
             <input accept=".csv" type="file" onChange={handleFileChange} />
-
+            {/* <div style={{ display: 'flex', alignItems: 'center' }}>
+                
+                
+            </div> */}
+            <br />
+            <br />
             <input ref={inputRef} type="text" placeholder="Enter label" value={label} onChange={handleInputChange} onKeyDown={handleKeyDown}
             />
             <button onClick={() =>btn_search(label)}>Search</button>
@@ -105,6 +112,7 @@ function Search() {
                     qrbox={500}
                     disableFlip={false}
                     qrCodeSuccessCallback={onNewScanResult}
+                    supportedScanTypes={[Html5QrcodeScanType.SCAN_TYPE_CAMERA]}
                 />
 
             {data && Object.keys(data).length > 0 && (
@@ -118,7 +126,11 @@ function Search() {
                     <tbody>
                         {Object.keys(data).map((key, i) => (
                             <tr key={i}>
-                                <td>{key}</td>
+                                {key === "service_id_or_serial_number" ? (
+                                    <td>service_id/serial_number</td>
+                                ) : (
+                                    <td>{key}</td>
+                                )}
                                 <td>{data[key]}</td>
                             </tr>
                         ))}

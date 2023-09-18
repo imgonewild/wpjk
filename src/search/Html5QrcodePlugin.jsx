@@ -16,9 +16,12 @@ const createConfig = (props) => {
     if (props.aspectRatio) {
         config.aspectRatio = props.aspectRatio;
     }
+    if (props.supportedScanTypes) {
+        config.supportedScanTypes = props.supportedScanTypes;
+    } 
     if (props.disableFlip !== undefined) {
         config.disableFlip = props.disableFlip;
-    }
+    } 
     return config;
 };
 
