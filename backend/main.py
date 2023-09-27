@@ -70,8 +70,8 @@ def upload():
         return jsonify(str(e))
 
 
-if __name__ == '__main__':    
-    # app.run(socket.gethostbyname(socket.gethostname()), debug=True, port=5000)
-    app.run(host=socket.gethostbyname(socket.gethostname()), port=5000, debug=True, threaded=False, ssl_context='adhoc')
+if __name__ == '__main__': #WP-DV-23101
+    app.run(host='0.0.0.0')
+    # app.run(host=socket.gethostbyname(socket.gethostname()), port=5000, debug=True, threaded=False, ssl_context='adhoc')
     # app.run(host='192.168.0.12', port=5000, debug=True, ssl_context='adhoc')
     # app.run(host='192.168.68.57', port=5000, debug=True, threaded=False)

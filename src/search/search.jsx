@@ -8,7 +8,7 @@ function Search() {
     const [data, setData] = useState([]);
     const [img, setImg] = useState(null);
     const inputRef = useRef();
-
+    const qrbox = window.screen.width -5
     let canTrigger = true;
     const onNewScanResult = (decodedText, decodedResult) => {
         if (canTrigger) {
@@ -25,7 +25,7 @@ function Search() {
         }
     };      
 
-    const protocol = "https:";
+    const protocol = "http:";
     const hostname = window.location.hostname;
 
     const handleFileChange = (event) => {
@@ -62,12 +62,14 @@ function Search() {
                 alert('Upload failed! ' + error)
             });
     };
-
+    
     const btn_search = (val)=>{
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
         setImg(val)
         fetch(`${protocol}//${hostname}:5000/fetchLabel`, {
             method: 'POST',
-            body: JSON.stringify({ "label": val })
+            body: JSON.stringify({ "label": val }),
         })
             .then(response => response.json())
             .then(data => {
@@ -109,7 +111,7 @@ function Search() {
 
             <Html5QrcodePlugin
                     fps={20}
-                    qrbox={500}
+                    // qrbox={qrbox}
                     disableFlip={false}
                     qrCodeSuccessCallback={onNewScanResult}
                     supportedScanTypes={[Html5QrcodeScanType.SCAN_TYPE_CAMERA]}
