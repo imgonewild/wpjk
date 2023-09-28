@@ -4,14 +4,14 @@
 
 Install dependency
 
-## `npm run start-ssl`
+## `npm run`
 
 Runs the app in the development mode with https
 Open [https://YourIPAddress:3000](https://YourIPAddress:3000) to view it in your browser.
 
 ## Notes:
 
-You need to allow insecure content(https://YourIpv4Address:3000) in your browser or you won't able to get respond from backend.
+You need to allow insecure content(http://YourIpv4Address:3000) in your browser or you won't able to get respond from backend.
 
 ### Chrome setup
 | ![Result](https://github.com/imgonewild/wpjk/blob/main/chrome_allow_insecure.jpg?raw=true) |
@@ -31,7 +31,7 @@ You need to allow insecure content(https://YourIpv4Address:3000) in your browser
 
 Install dependency
 
-Request url: https://YourIpv4Address:5000
+Request url: http://YourIpv4Address:5000
 
 <br />
 
