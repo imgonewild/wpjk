@@ -8,7 +8,6 @@ function Search() {
     const [data, setData] = useState([]);
     const [img, setImg] = useState(null);
     const inputRef = useRef();
-    const qrbox = window.screen.width - 5
     let canTrigger = true;
     const onNewScanResult = (decodedText, decodedResult) => {
         if (canTrigger) {
@@ -99,13 +98,6 @@ function Search() {
         <div style={{ marginTop: "15px", marginLeft: "10px", marginRight: "10px" }}>
             <img src="./inteplast_wpjk.jpg" alt="Inteplast" height={70} style={{ marginBottom: "10px" }} />
             <input accept=".csv" type="file" onChange={handleFileChange} />
-            {/* <button htmlFor="files">Choose File</button>
-            <input accept=".csv" type="file" style={{ visibility: "hidden" }} onChange={handleFileChange} /> */}
-
-            {/* <div style={{ display: 'flex', alignItems: 'center' }}>
-                
-                
-            </div> */}
             <br />
             <br />
             <input ref={inputRef} type="text" placeholder="Enter label" value={label} onChange={handleInputChange} onKeyDown={handleKeyDown}
@@ -114,7 +106,6 @@ function Search() {
 
             <Html5QrcodePlugin
                 fps={20}
-                // qrbox={qrbox}
                 disableFlip={false}
                 qrCodeSuccessCallback={onNewScanResult}
                 supportedScanTypes={[Html5QrcodeScanType.SCAN_TYPE_CAMERA]}
